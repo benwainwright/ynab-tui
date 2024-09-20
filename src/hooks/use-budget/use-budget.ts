@@ -24,7 +24,9 @@ export const useBudget = (config?: UseBudgetConfig) => {
       }
     }
 
-    asyncContext()
+    if (!budget) {
+      asyncContext()
+    }
   }, [api])
 
   return { budget }

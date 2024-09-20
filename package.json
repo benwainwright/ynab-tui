@@ -18,6 +18,7 @@
   "dependencies": {
     "@1password/op-js": "0.1.13",
     "@swc/plugin-transform-imports": "^3.0.2",
+    "@tqman/ink-table": "0.0.0-development",
     "@types/react": "^18.3.8",
     "@vitest/coverage-v8": "^2.1.1",
     "cmd-ts": "^0.13.0",

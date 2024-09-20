@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import { useTransactions } from './use-transactions.ts'
+import { useAccount } from './use-account.tsx'
 import { mock } from 'vitest-mock-extended'
 import {
   API,
@@ -45,10 +45,10 @@ describe('useTransactions', () => {
 
     vi.mocked(useApi).mockReturnValue({ api: mockApi })
 
-    const { result } = renderHook(() => useTransactions({ id: 'account-123' }))
+    const { result } = renderHook(() => useAccount({ id: 'account-123' }))
 
     expect(result.current.transactions).toBeUndefined()
-    
+
     await waitFor(() => {
       expect(result.current.transactions).toEqual(transactions)
     })
