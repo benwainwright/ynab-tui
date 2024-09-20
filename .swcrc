@@ -39,7 +39,12 @@
 
     "paths": {
       "@core": ["./src/core/index.ts"],
-      "@types": ["./src/types/index.ts"]
+      "@cli": ["./src/cli/index.ts"],
+      "@components": ["./src/components/index.ts"],
+      "@types": ["./src/types/index.ts"],
+      "@utils": ["./src/utils/index.ts"],
+      "@constants": ["./src/constants.ts"],
+      "@test-suppot": ["./src/test-support/index.ts"]
     }
   },
   "module": {

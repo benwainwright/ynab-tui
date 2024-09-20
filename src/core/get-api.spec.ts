@@ -10,14 +10,13 @@ afterEach(() => {
 })
 
 describe('get api', () => {
-  it('calls the auth strategy, passes it the API then returns the result', () => {
+  it('calls the auth strategy, passes it the API then returns the result', async () => {
     const authStrategy = vi.fn().mockResolvedValue('token')
-
-    const result = getApi(authStrategy)
-
     const mockApi = mock<API>()
 
     when(vi.mocked(API)).calledWith('token').thenReturn(mockApi)
+
+    const result = await getApi(authStrategy)
 
     expect(result).toBe(mockApi)
   })

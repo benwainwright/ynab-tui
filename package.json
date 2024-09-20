@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest --watch"
   },
   "type": "module",
   "author": "",
@@ -15,15 +15,25 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@1password/op-js": "^0.1.13",
-    "ink": "^5.0.1",
-    "prettier": "^3.3.3",
-    "swc": "^1.0.11",
-    "typescript": "^5.6.2",
-    "vite-node": "^2.1.1",
-    "vitest": "^2.1.1",
-    "vitest-mock-extended": "^2.0.2",
-    "vitest-when": "^0.4.1",
-    "ynab": "^2.6.0"
+    "@1password/op-js": "0.1.13",
+    "@types/react": "^18.3.8",
+    "@vitest/coverage-v8": "^2.1.1",
+    "cmd-ts": "^0.13.0",
+    "ink": "5.0.1",
+    "react": "^18.3.1",
+    "ynab": "2.6.0"
+  },
+  "devDependencies": {
+    "execa": "^9.4.0",
+    "prettier": "3.3.3",
+    "strip-ansi": "^7.1.0",
+    "swc": "1.0.11",
+    "typescript": "5.6.2",
+    "vite": "^5.4.7",
+    "vite-node": "2.1.1",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "2.1.1",
+    "vitest-mock-extended": "2.0.2",
+    "vitest-when": "0.4.1"
   }
 }

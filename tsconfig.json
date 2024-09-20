@@ -24,7 +24,12 @@
     "baseUrl": "./",
     "paths": {
       "@core": ["src/core/index.ts"],
-      "@types": ["src/types/index.ts"]
+      "@components": ["src/components/index.ts"],
+      "@constants": ["src/constants.ts"],
+      "@cli": ["src/cli/index.ts"],
+      "@types": ["src/types/index.ts"],
+      "@test-support": ["src/test-support/index.ts"],
+      "@utils": ["src/utils/index.ts"]
     }
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "./vitest.config.ts"],
