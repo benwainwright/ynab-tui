@@ -1,6 +1,6 @@
 import { APP_NAME, APP_VERSION } from '@constants'
 import { subcommands } from 'cmd-ts'
-import { run } from './run.ts'
+import { run } from './run.tsx'
 
 export const app = subcommands({
   name: APP_NAME,

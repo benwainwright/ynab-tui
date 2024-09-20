@@ -1,5 +1,14 @@
-import { Box } from 'ink'
+import { Box, Text, useApp } from 'ink'
+import { useEffect } from 'react'
 
 export const App = () => {
-  return <Box></Box>
+  const { exit } = useApp()
+  useEffect(() => {
+    exit()
+  }, [])
+  return (
+    <Box>
+      <Text>Testing</Text>
+    </Box>
+  )
 }

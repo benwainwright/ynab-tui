@@ -1,10 +1,10 @@
 import { command, run } from 'cmd-ts'
 import { app } from './app.ts'
 import { APP_NAME, APP_VERSION } from '@constants'
-import { run as runCommand } from './run.ts'
+import { run as runCommand } from './run.tsx'
 import stripAnsi from 'strip-ansi'
 
-vi.mock('./run.ts', () => {
+vi.mock('./run.tsx', () => {
   const mockCommand = command({
     name: 'run',
     args: {},
