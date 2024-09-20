@@ -1,0 +1,49 @@
+{
+  "exclude": "node_modules/",
+  "sourceMaps": true,
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "topLevelAwait": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    },
+    "target": "esnext",
+    "baseUrl": ".",
+    "experimental": {
+      "plugins": [
+        [
+          "@swc/plugin-transform-imports",
+          {
+            "^(.*?)(\\.ts)$": {
+              "skipDefaultConversion": true,
+              "transform": "{{matches.[1]}}.js"
+            }
+          }
+        ],
+
+        [
+          "@swc/plugin-transform-imports",
+          {
+            "^(.*?)(\\.tsx)$": {
+              "skipDefaultConversion": true,
+              "transform": "{{matches.[1]}}.js"
+            }
+          }
+        ]
+      ]
+    },
+
+    "paths": {
+      "@core": ["./src/core/index.ts"],
+      "@types": ["./src/types/index.ts"]
+    }
+  },
+  "module": {
+    "resolveFully": true,
+    "type": "nodenext"
+  }
+}

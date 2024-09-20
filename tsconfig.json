@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 21",
+  "_version": "21.0.0",
+  "compilerOptions": {
+    "lib": ["es2023"],
+    "types": ["vitest/globals"],
+    "module": "node16",
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2022",
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react-jsx",
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noImplicitOverride": true,
+    "moduleResolution": "node16",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@core": ["src/core/index.ts"],
+      "@types": ["src/types/index.ts"]
+    }
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./vitest.config.ts"],
+  "exclude": ["dist"]
+}
