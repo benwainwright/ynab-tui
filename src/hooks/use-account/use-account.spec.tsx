@@ -2,6 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { useAccount } from './use-account.tsx'
 import { mock } from 'vitest-mock-extended'
 import {
+  Account,
   API,
   BudgetSummary,
   TransactionDetail,
@@ -29,8 +30,11 @@ describe('useTransactions', () => {
       },
     })
 
+    const account = mock<Account>({ name: 'Current', id: 'account-123' })
+
     const budget = mock<BudgetSummary>({
       id: 'budget-123',
+      accounts: [account],
     })
 
     when(mockTransactionsApi.getTransactionsByAccount)
@@ -41,11 +45,11 @@ describe('useTransactions', () => {
       transactions: mockTransactionsApi,
     })
 
-    when(useBudget).calledWith().thenReturn({ budget })
+    when(useBudget).calledWith({ includeAccounts: true }).thenReturn({ budget })
 
     vi.mocked(useApi).mockReturnValue({ api: mockApi })
 
-    const { result } = renderHook(() => useAccount({ id: 'account-123' }))
+    const { result } = renderHook(() => useAccount({ name: 'Current' }))
 
     expect(result.current.transactions).toBeUndefined()
 
