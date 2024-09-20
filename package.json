@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "vitest --watch"
+    "test": "vitest --watch",
+    "build": "swc src --out-dir dist"
   },
   "type": "module",
   "author": "",
@@ -16,18 +17,23 @@
   },
   "dependencies": {
     "@1password/op-js": "0.1.13",
+    "@swc/plugin-transform-imports": "^3.0.2",
     "@types/react": "^18.3.8",
     "@vitest/coverage-v8": "^2.1.1",
     "cmd-ts": "^0.13.0",
     "ink": "5.0.1",
+    "ink-spinner": "^5.0.0",
     "react": "^18.3.1",
     "ynab": "2.6.0"
   },
   "devDependencies": {
+    "@swc/cli": "0.4.1-nightly.20240914",
+    "@swc/core": "^1.7.26",
+    "@testing-library/react": "^16.0.1",
     "execa": "^9.4.0",
+    "jsdom": "^25.0.0",
     "prettier": "3.3.3",
     "strip-ansi": "^7.1.0",
-    "swc": "1.0.11",
     "typescript": "5.6.2",
     "vite": "^5.4.7",
     "vite-node": "2.1.1",

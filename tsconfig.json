@@ -27,6 +27,7 @@
       "@components": ["src/components/index.ts"],
       "@constants": ["src/constants.ts"],
       "@cli": ["src/cli/index.ts"],
+      "@hooks": ["src/hooks/index.ts"],
       "@types": ["src/types/index.ts"],
       "@test-support": ["src/test-support/index.ts"],
       "@utils": ["src/utils/index.ts"]

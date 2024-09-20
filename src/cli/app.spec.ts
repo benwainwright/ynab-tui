@@ -1,18 +1,18 @@
 import { command, run } from 'cmd-ts'
 import { app } from './app.ts'
 import { APP_NAME, APP_VERSION } from '@constants'
-import { run as runCommand } from './run.tsx'
+import { account } from './account.tsx'
 import stripAnsi from 'strip-ansi'
 
-vi.mock('./run.tsx', () => {
+vi.mock('./account.tsx', () => {
   const mockCommand = command({
-    name: 'run',
+    name: 'account',
     args: {},
     handler: vi.fn(),
   })
 
   return {
-    run: mockCommand,
+    account: mockCommand,
   }
 })
 
@@ -34,8 +34,8 @@ describe('the app command', () => {
   })
 
   it('has been configured with the correct command', async () => {
-    await run(app, ['run'])
-    expect(runCommand.handler).toBeCalled()
+    await run(app, ['account'])
+    expect(account.handler).toBeCalled()
   })
 
   it('returns the correct name when passing the --help', async () => {
@@ -49,7 +49,7 @@ describe('the app command', () => {
 
 where <subcommand> can be one of:
 
-- run
+- account
 
 For more help, try running \`${APP_NAME} <subcommand> --help\``)
   })

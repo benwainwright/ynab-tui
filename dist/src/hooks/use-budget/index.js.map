@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/hooks/use-budget/index.ts"],"sourcesContent":["export { useBudget } from './use-budget.ts'\n"],"names":["useBudget"],"mappings":"AAAA,SAASA,SAAS,0BAAyB"}

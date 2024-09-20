@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/components/loading/index.ts"],"sourcesContent":["export { Loading } from './loading.tsx'\n"],"names":["Loading"],"mappings":"AAAA,SAASA,OAAO,uBAAuB"}

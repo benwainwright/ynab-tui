@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/hooks/use-config/index.ts"],"sourcesContent":["export { useConfig } from './use-config.ts'\n"],"names":["useConfig"],"mappings":"AAAA,SAASA,SAAS,0BAAyB"}

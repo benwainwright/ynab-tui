@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/types/auth-strategy.ts"],"sourcesContent":["export type AuthStrategy = () => Promise<string>;\n"],"names":[],"mappings":"AAAA,WAAiD"}
