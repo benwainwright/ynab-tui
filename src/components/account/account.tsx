@@ -1,11 +1,6 @@
-import { useBudget, useAccount } from '@hooks'
-import { Box, Text, useInput } from 'ink'
-import {
-  AccountHeader,
-  CurrencyValue,
-  Loading,
-  TransactionList,
-} from '@components'
+import { useAccount } from '@hooks'
+import { Box } from 'ink'
+import { AccountHeader, Loading, TransactionList } from '@components'
 
 interface AccountProps {
   name: string

@@ -31,7 +31,7 @@ export const AccountHeader = ({
           </Text>
         </Box>
         <Box>
-          <Text bold>Type </Text>
+          <Text>Type </Text>
           <Text bold color="green">
             <AccountTypeLabel type={type} />
           </Text>
