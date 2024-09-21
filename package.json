@@ -1,18 +1,29 @@
 {
     "name": "ynab-tui",
     "version": "1.0.0",
-    "description": "",
+    "description": "A terminal UI for YNAB",
     "main": "index.js",
+    "files": [
+        "dist"
+    ],
+    "bin": {
+        "ynab": "./bin/run.js"
+    },
     "scripts": {
         "test": "NODE_OPTIONS=--no-warnings vitest --watch",
+        "test:ci": "NODE_OPTIONS=--no-warnings vitest --coverage",
+        "test:ui": "NODE_OPTIONS=--no-warnings vitest --ui --watch",
         "build": "swc src --out-dir dist",
         "lint": "eslint .",
         "start": "NODE_OPTIONS=--no-warnings vite-node src/entry.ts",
         "format": "prettier --write ."
     },
     "type": "module",
-    "author": "Ben Wainwright",
-    "license": "ISC",
+    "author": {
+        "name": "Ben Wainwright",
+        "email": "bwainwright28@gmail.com"
+    },
+    "license": "AGPL-3.0",
     "prettier": {
         "tabWidth": 2,
         "semi": false,
@@ -42,6 +53,7 @@
         "@testing-library/react": "16.0.1",
         "@typescript-eslint/eslint-plugin": "8.6.0",
         "@vitest/coverage-v8": "2.1.1",
+        "@vitest/ui": "^2.1.1",
         "eslint": "9.11.0",
         "eslint-plugin-filenames": "1.3.2",
         "eslint-plugin-import": "2.30.0",

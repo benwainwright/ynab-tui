@@ -1,9 +1,12 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.formatOnType": true,
-  "testing.alwaysRevealTestOnStateChange": false,
-  "prettier.configPath": "prettier.config.json",
-  "prettier.requireConfig": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "testing.alwaysRevealTestOnStateChange": false,
+    "prettier.configPath": "prettier.config.json",
+    "prettier.requireConfig": true,
+    "files.associations": {
+        "*.yaml": "home-assistant"
+    }
 }
