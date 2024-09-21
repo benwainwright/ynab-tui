@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../src/entry.ts"],"sourcesContent":["import { app } from '@cli'\nimport { run } from 'cmd-ts'\n\nawait run(app, process.argv.slice(2))\n"],"names":["app","run","process","argv","slice"],"mappings":"AAAA,SAASA,GAAG,QAAQ,iBAAM;AAC1B,SAASC,GAAG,QAAQ,SAAQ;AAE5B,MAAMA,IAAID,KAAKE,QAAQC,IAAI,CAACC,KAAK,CAAC"}

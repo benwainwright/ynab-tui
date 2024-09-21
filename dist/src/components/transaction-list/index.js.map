@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/components/transaction-list/index.ts"],"sourcesContent":["export { TransactionList } from './transaction-list.tsx'\n"],"names":["TransactionList"],"mappings":"AAAA,SAASA,eAAe,gCAAgC"}

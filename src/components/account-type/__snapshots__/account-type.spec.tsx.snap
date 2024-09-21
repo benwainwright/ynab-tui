@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`account type > Should render the correct text for the given account type 1`] = `"Auto Loan"`;
+
+exports[`account type > Should render the correct text for the given account type 2`] = `"Cash"`;
+
+exports[`account type > Should render the correct text for the given account type 3`] = `"Checking"`;
+
+exports[`account type > Should render the correct text for the given account type 4`] = `"Credit Card"`;
+
+exports[`account type > Should render the correct text for the given account type 5`] = `"Line of Credit"`;
+
+exports[`account type > Should render the correct text for the given account type 6`] = `"Medical Debt"`;
+
+exports[`account type > Should render the correct text for the given account type 7`] = `"Mortgage"`;
+
+exports[`account type > Should render the correct text for the given account type 8`] = `"Other Asset"`;
+
+exports[`account type > Should render the correct text for the given account type 9`] = `"Other Debt"`;
+
+exports[`account type > Should render the correct text for the given account type 10`] = `"Other Liability"`;
+
+exports[`account type > Should render the correct text for the given account type 11`] = `"Personal Loan"`;
+
+exports[`account type > Should render the correct text for the given account type 12`] = `"Savings"`;
+
+exports[`account type > Should render the correct text for the given account type 13`] = `"Student Loan"`;
+
+exports[`account type > Should render the correct text for the given account type 14`] = `"Personal Loan"`;
+
+exports[`account type > Should render the correct text for the given account type 15`] = `"Savings"`;

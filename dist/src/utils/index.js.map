@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../src/utils/index.ts"],"sourcesContent":["export { __dirname } from './dirname.ts'\n"],"names":["__dirname"],"mappings":"AAAA,SAASA,SAAS,uBAAsB"}
