@@ -1,1 +1,1 @@
-export type AuthStrategy = () => Promise<string>;
+export type AuthStrategy = () => Promise<string>

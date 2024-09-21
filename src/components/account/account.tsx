@@ -18,7 +18,6 @@ export const Account = ({ name }: AccountProps) => {
     name,
   })
 
-
   return (
     <Box padding={1} flexDirection="column">
       <Loading data={{ transactions, account }} name="account">

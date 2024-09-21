@@ -10,14 +10,15 @@ export const renderApp = async (
     const [element, ...rest] = args
 
     const newArgs = [
-      <BudgetProvider>
-        <ConfigProvider injectedConfig={config}>
-          <ApiProvider>{element}</ApiProvider>
-        </ConfigProvider>
-      </BudgetProvider>,
-    ]
+      <ConfigProvider injectedConfig={config}>
+        <ApiProvider>
+          <BudgetProvider>{element}</BudgetProvider>
+        </ApiProvider>
+      </ConfigProvider>,
+      ...rest,
+    ] as const
 
-    const instance = render(...args)
+    const instance = render(...newArgs)
     await instance.waitUntilExit()
     return instance
   } catch (error) {
