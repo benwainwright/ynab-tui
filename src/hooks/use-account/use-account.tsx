@@ -1,8 +1,8 @@
-import { useApi, useBudget } from '@hooks'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
+import { ApiContext, BudgetContext } from '@contexts'
+
 import {
-  TransactionSummary,
   ExistingTransaction,
   TransactionClearedStatus,
   TransactionDetail,
@@ -18,8 +18,9 @@ export const useAccount = (config: UseAccountConfig) => {
   >()
 
   const [dirty, setDirty] = useState(true)
-  const { api } = useApi()
-  const { budget } = useBudget({ includeAccounts: true, dirty })
+  const { api } = useContext(ApiContext)
+  const result = useContext(BudgetContext)
+  const { budget, refresh } = result
 
   const account = budget?.accounts?.find(
     (account) => account.name === config.name,
@@ -40,33 +41,37 @@ export const useAccount = (config: UseAccountConfig) => {
       },
     )
     setDirty(true)
+    refresh()
   }
 
   useEffect(() => {
     const asyncContext = async () => {
-      if (api && budget) {
-        if (account) {
-          const {
-            data: { transactions: transactionsReturned },
-          } = await api.transactions.getTransactionsByAccount(
-            budget.id,
-            account.id,
-          )
+      try {
+        if (api && budget) {
+          if (account) {
+            const {
+              data: { transactions: transactionsReturned },
+            } = await api.transactions.getTransactionsByAccount(
+              budget.id,
+              account.id,
+            )
 
-          setTransactions(
-            transactionsReturned.slice().sort((a, b) => {
-              return DateTime.fromISO(a.date) > DateTime.fromISO(b.date)
-                ? -1
-                : 1
-            }),
-          )
-          setDirty(false)
+            setTransactions(
+              transactionsReturned.slice().sort((a, b) => {
+                return DateTime.fromISO(a.date) > DateTime.fromISO(b.date)
+                  ? -1
+                  : 1
+              }),
+            )
+            setDirty(false)
+          }
         }
+      } catch (e) {
+        console.log(e)
       }
     }
-
     if (dirty) {
-      asyncContext()
+      void asyncContext()
     }
   }, [api, budget, transactions, account, dirty])
 

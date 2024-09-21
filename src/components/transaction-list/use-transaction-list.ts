@@ -1,6 +1,7 @@
 import { useInput } from 'ink'
 import { useState } from 'react'
 import { TransactionClearedStatus, TransactionDetail } from 'ynab'
+import humanDate from 'human-date'
 
 interface UseTransactionListConfig {
   transactions: TransactionDetail[]
@@ -9,6 +10,17 @@ interface UseTransactionListConfig {
   unapproveTransaction: (id: string) => Promise<void>
   clearTransaction: (id: string) => Promise<void>
   unclearTransaction: (id: string) => Promise<void>
+}
+
+const getClearCell = (status: TransactionClearedStatus) => {
+  switch (status) {
+    case TransactionClearedStatus.Cleared:
+      return { color: 'green', value: 'C' }
+    case TransactionClearedStatus.Uncleared:
+      return { color: 'red', value: 'U' }
+    case TransactionClearedStatus.Reconciled:
+      return { color: 'green', value: 'R' }
+  }
 }
 
 export const useTransactionList = ({
@@ -20,17 +32,17 @@ export const useTransactionList = ({
   unclearTransaction,
 }: UseTransactionListConfig) => {
   const tableRows = transactions.map((transaction) => ({
-    date: transaction.date,
+    date: humanDate.relativeTime(transaction.date),
     payee: transaction.payee_name ?? '',
     amount: new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',
     }).format(transaction.amount / 1000),
-    approved: transaction.approved ? 'Yes' : 'No',
-    cleared: transaction.cleared,
+    approved: transaction.approved
+      ? { color: 'green', value: 'A' }
+      : { value: 'U', color: 'red' },
+    cleared: getClearCell(transaction.cleared),
   }))
-
-  console.log(transactions.slice(0, 10))
 
   const [selected, setSelected] = useState<number | undefined>()
   const [range, setRange] = useState<[number, number]>([0, pageSize])
@@ -64,6 +76,9 @@ export const useTransactionList = ({
     }
   }
 
+  const currentTransaction =
+    selected !== undefined && transactions[range[0] + selected]
+
   const toggleApprove = async () => {
     if (currentTransaction) {
       if (currentTransaction.approved) {
@@ -85,8 +100,6 @@ export const useTransactionList = ({
       }
     }
   }
-
-  const currentTransaction = selected && transactions[range[0] + selected]
 
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   useInput(async (input, key) => {

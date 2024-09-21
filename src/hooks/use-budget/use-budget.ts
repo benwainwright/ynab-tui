@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { BudgetSummary } from 'ynab'
-import { useApi } from '@hooks'
+import { ApiContext } from '@contexts'
 
 interface UseBudgetConfig {
   includeAccounts?: boolean
@@ -9,23 +9,39 @@ interface UseBudgetConfig {
 
 export const useBudget = (config?: UseBudgetConfig) => {
   const [budget, setBudget] = useState<BudgetSummary | undefined>()
-  const { api } = useApi()
+  const [dirty, setDirty] = useState(true)
+  const { api } = useContext(ApiContext)
+
+  const refresh = () => {
+    setDirty(true)
+  }
 
   useEffect(() => {
-    const asyncContext = async () => {
-      if (api) {
-        const {
-          data: {
-            budgets: [budget],
-          },
-        } = await api.budgets.getBudgets(config?.includeAccounts)
+    try {
+      const asyncContext = async () => {
+        if (api) {
+          const {
+            data: {
+              budgets: [budget],
+            },
+          } = await api.budgets.getBudgets(config?.includeAccounts)
 
-        setBudget(budget)
+          setBudget(budget)
+          setDirty(false)
+        }
       }
+
+      if (dirty) {
+        void asyncContext()
+      }
+    } catch (e) {
+      console.log(e)
     }
+  }, [api, dirty])
 
-    void asyncContext()
-  }, [api, config?.dirty])
-
-  return { budget }
+  if (budget) {
+    return { budget, refresh }
+  } else {
+    return { budget: undefined, refresh: undefined }
+  }
 }

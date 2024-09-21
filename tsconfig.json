@@ -30,7 +30,8 @@
       "@hooks": ["src/hooks/index.ts"],
       "@types": ["src/types/index.ts"],
       "@test-support": ["src/test-support/index.ts"],
-      "@utils": ["src/utils/index.ts"]
+      "@utils": ["src/utils/index.ts"],
+      "@contexts": ["src/contexts/index.ts"]
     }
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "./vitest.config.ts"],

@@ -3,6 +3,18 @@ import { useBudget } from './use-budget.ts'
 import { useApi, useConfig } from '@hooks'
 import { mock } from 'vitest-mock-extended'
 import { API, BudgetsApi, BudgetSummary, BudgetSummaryResponse } from 'ynab'
+import { useContext } from 'react'
+import { when } from 'vitest-when'
+import { ApiContext } from '@contexts'
+
+vi.mock(import('react'), async (originalImport) => {
+  const original = await originalImport()
+
+  return {
+    ...original,
+    useContext: vi.fn(),
+  }
+})
 
 vi.mock('@hooks')
 vi.mock('@core')
@@ -15,14 +27,18 @@ describe('use budget', () => {
   it('starts off as undefined then loads in the budget', async () => {
     const mockAuthStrategy = vi.fn()
 
-    vi.mocked(useConfig).mockReturnValue({
-      apiAuthStrategy: mockAuthStrategy,
-    })
-
     const mockBudgets = mock<BudgetsApi>()
 
     const mockApi = mock<API>({
       budgets: mockBudgets,
+    })
+
+    when(useContext<{ api: API | undefined }>)
+      .calledWith(ApiContext)
+      .thenReturn({ api: mockApi })
+
+    vi.mocked(useConfig).mockReturnValue({
+      apiAuthStrategy: mockAuthStrategy,
     })
 
     const budgetOne = mock<BudgetSummary>()

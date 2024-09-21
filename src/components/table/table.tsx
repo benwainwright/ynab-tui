@@ -1,13 +1,15 @@
 import { Box, DOMElement, measureElement, Text } from 'ink'
 import { useState } from 'react'
 
-export type Scalar = string | number | boolean | null | undefined
+export type Scalar = string | number | boolean | undefined
 
-type ScalarDict = {
-  [key: string]: Scalar
+type Cell = Scalar | { value: Scalar; color: string }
+
+type Row = {
+  [key: string]: Cell
 }
 
-interface TableProps<T extends ScalarDict> {
+interface TableProps<T extends Row> {
   onPageChange?: (page: number) => void
   start?: number
   end?: number
@@ -19,15 +21,15 @@ interface TableProps<T extends ScalarDict> {
   )[]
 }
 
-export const Table = <T extends ScalarDict>({
+export const Table = <T extends Row>({
   start,
   selected,
   end,
   data,
   cellComponents,
 }: TableProps<T>) => {
-  const headerRow = Object.entries(data[0]).map(
-    ([key]) => `${key.charAt(0).toLocaleUpperCase()}${key.slice(1)}`,
+  const headerRow = Object.keys(data[0]).map(
+    (key) => `${key.charAt(0).toLocaleUpperCase()}${key.slice(1)}`,
   )
 
   const rows = data.map((row) =>
@@ -43,10 +45,11 @@ export const Table = <T extends ScalarDict>({
   const widths = all
     .reduce<{ length: number; content: string }[]>((previousWidths, row) => {
       return previousWidths.map((maxWidth, i) => {
-        if (maxWidth.length > String(row[i]).length) {
+        const length = Array.from(String(row[i])).length
+        if (maxWidth.length > length) {
           return maxWidth
         } else {
-          return { length: String(row[i]).length, content: String(row[i]) }
+          return { length, content: String(row[i]) }
         }
       })
     }, startWidths)
@@ -84,7 +87,18 @@ export const Table = <T extends ScalarDict>({
         >
           {row.map((cell, ic) => {
             const CellComponent = cellComponents?.[ic]
-            const color = rowSelected ? { color: 'green' } : {}
+            const selectedColor = rowSelected ? { color: 'green' } : {}
+            const cellValue = typeof cell === 'object' ? cell?.value : cell
+            const color =
+              typeof cell === 'object'
+                ? { ...selectedColor, color: cell.color }
+                : selectedColor
+
+            const width =
+              typeof cellValue === 'string' && cellValue.includes('❌')
+                ? widths[ic].length - 1
+                : widths[ic].length
+
             return (
               <Box
                 borderBottom={false}
@@ -93,13 +107,13 @@ export const Table = <T extends ScalarDict>({
                 borderRight={false}
                 borderLeft={ic > 0 ? true : false}
                 key={`cell-${cell}-${ic}`}
-                width={widths[ic].length}
+                width={width}
                 paddingX={1}
               >
                 {CellComponent ? (
-                  <CellComponent {...color} value={cell} />
+                  <CellComponent {...color} value={cellValue} />
                 ) : (
-                  <Text {...color}>{cell}</Text>
+                  <Text {...color}>{cellValue}</Text>
                 )}
               </Box>
             )

@@ -1,6 +1,5 @@
-import { CurrencyValue, Scalar, Table } from '@components'
-import { Box, Text, useInput } from 'ink'
-import { useState } from 'react'
+import { Table } from '@components'
+import { Box } from 'ink'
 import { TransactionDetail } from 'ynab'
 import { useTransactionList } from './use-transaction-list.ts'
 

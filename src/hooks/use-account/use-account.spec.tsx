@@ -11,6 +11,8 @@ import {
 } from 'ynab'
 import { useApi, useBudget } from '@hooks'
 import { when } from 'vitest-when'
+import { ApiContext, BudgetContext } from '@contexts'
+import { Box } from 'ink'
 
 vi.mock('@hooks')
 
@@ -18,7 +20,7 @@ beforeEach(() => {
   vi.resetAllMocks()
 })
 
-describe('useTransactions', () => {
+describe('use account', () => {
   it('should return the transactions for the given account given the account id', async () => {
     const mockTransactionsApi = mock<TransactionsApi>()
 
@@ -45,11 +47,19 @@ describe('useTransactions', () => {
       transactions: mockTransactionsApi,
     })
 
-    when(useBudget).calledWith({ includeAccounts: true }).thenReturn({ budget })
-
     vi.mocked(useApi).mockReturnValue({ api: mockApi })
 
-    const { result } = renderHook(() => useAccount({ name: 'Current' }))
+    const { result } = renderHook(() => useAccount({ name: 'Current' }), {
+      wrapper: ({ children }: { children: React.ReactNode }) => (
+        <Box>
+          <BudgetContext.Provider value={{ budget, refresh: vi.fn() }}>
+            <ApiContext.Provider value={{ api: mockApi }}>
+              {children}
+            </ApiContext.Provider>
+          </BudgetContext.Provider>
+        </Box>
+      ),
+    })
 
     expect(result.current.transactions).toBeUndefined()
 

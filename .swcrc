@@ -45,7 +45,8 @@
       "@utils": ["./src/utils/index.ts"],
       "@constants": ["./src/constants.ts"],
       "@hooks": ["./src/hooks/index.ts"],
-      "@test-suppot": ["./src/test-support/index.ts"]
+      "@test-suppot": ["./src/test-support/index.ts"],
+      "@contexts": ["./src/contexts/index.ts"]
     }
   },
   "module": {
