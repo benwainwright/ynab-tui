@@ -1,6 +1,12 @@
 import { useApi, useBudget } from '@hooks'
 import { useEffect, useState } from 'react'
-import { TransactionSummary, Account } from 'ynab'
+import { DateTime } from 'luxon'
+import {
+  TransactionSummary,
+  ExistingTransaction,
+  TransactionClearedStatus,
+  TransactionDetail,
+} from 'ynab'
 
 interface UseAccountConfig {
   name?: string
@@ -8,21 +14,38 @@ interface UseAccountConfig {
 
 export const useAccount = (config: UseAccountConfig) => {
   const [transactions, setTransactions] = useState<
-    TransactionSummary[] | undefined
+    TransactionDetail[] | undefined
   >()
-  const { api } = useApi()
-  const { budget } = useBudget({ includeAccounts: true })
 
-  const [range, setRange] = useState<[number, number]>([0, 0])
+  const [dirty, setDirty] = useState(true)
+  const { api } = useApi()
+  const { budget } = useBudget({ includeAccounts: true, dirty })
 
   const account = budget?.accounts?.find(
     (account) => account.name === config.name,
   )
 
+  const updateTransaction = async (
+    transactionId: string,
+    transactionDetails: ExistingTransaction,
+  ) => {
+    if (!budget || !api) {
+      throw new Error('Budget and API must be defined')
+    }
+    const result = await api.transactions.updateTransaction(
+      budget.id,
+      transactionId,
+      {
+        transaction: transactionDetails,
+      },
+    )
+    setDirty(true)
+  }
+
   useEffect(() => {
     const asyncContext = async () => {
       if (api && budget) {
-        if (!transactions && account) {
+        if (account) {
           const {
             data: { transactions: transactionsReturned },
           } = await api.transactions.getTransactionsByAccount(
@@ -30,17 +53,73 @@ export const useAccount = (config: UseAccountConfig) => {
             account.id,
           )
 
-          setTransactions(transactionsReturned)
+          setTransactions(
+            transactionsReturned.slice().sort((a, b) => {
+              return DateTime.fromISO(a.date) > DateTime.fromISO(b.date)
+                ? -1
+                : 1
+            }),
+          )
+          setDirty(false)
         }
       }
     }
 
-    asyncContext()
-  }, [api, budget, transactions, account])
+    if (dirty) {
+      asyncContext()
+    }
+  }, [api, budget, transactions, account, dirty])
+
+  const clearTransaction = async (id: string) => {
+    const transaction = transactions?.find(
+      (transaction) => transaction.id === id,
+    )
+
+    await updateTransaction(id, {
+      ...transaction,
+      cleared: TransactionClearedStatus.Cleared,
+    })
+  }
+
+  const approveTransaction = async (id: string) => {
+    const transaction = transactions?.find(
+      (transaction) => transaction.id === id,
+    )
+
+    await updateTransaction(id, {
+      ...transaction,
+      approved: true,
+    })
+  }
+
+  const unapproveTransaction = async (id: string) => {
+    const transaction = transactions?.find(
+      (transaction) => transaction.id === id,
+    )
+    await updateTransaction(id, {
+      ...transaction,
+      approved: false,
+    })
+  }
+
+  const unclearTransaction = async (id: string) => {
+    const transaction = transactions?.find(
+      (transaction) => transaction.id === id,
+    )
+
+    await updateTransaction(id, {
+      ...transaction,
+      cleared: TransactionClearedStatus.Uncleared,
+    })
+  }
 
   return {
     account,
     transactions,
-    range,
+    updateTransaction,
+    approveTransaction,
+    unapproveTransaction,
+    clearTransaction,
+    unclearTransaction,
   }
 }

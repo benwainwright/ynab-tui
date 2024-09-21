@@ -12,6 +12,7 @@ interface TableProps<T extends ScalarDict> {
   start?: number
   end?: number
   data: T[]
+  selected?: number
   cellComponents?: (
     | (<V extends Scalar>(config: { value: V }) => React.ReactNode)
     | undefined
@@ -20,11 +21,14 @@ interface TableProps<T extends ScalarDict> {
 
 export const Table = <T extends ScalarDict>({
   start,
+  selected,
   end,
   data,
   cellComponents,
 }: TableProps<T>) => {
-  const headerRow = Object.entries(data[0]).map(([key]) => key)
+  const headerRow = Object.entries(data[0]).map(
+    ([key]) => `${key.charAt(0).toLocaleUpperCase()}${key.slice(1)}`,
+  )
 
   const rows = data.map((row) =>
     Object.entries(row).map(([key, value]) => value),
@@ -66,37 +70,43 @@ export const Table = <T extends ScalarDict>({
 
   const contentBoxes = rows
     .slice(start ?? 0, end ?? data.length)
-    .map((row, i) => (
-      <Box
-        flexDirection="row"
-        key={`table-row-${i}`}
-        borderTop={true}
-        borderLeft={false}
-        borderRight={false}
-        borderBottom={false}
-        borderStyle="single"
-      >
-        {row.map((cell, ic) => {
-          const CellComponent = cellComponents?.[ic]
-          return (
-            <Box
-              borderBottom={false}
-              borderTop={false}
-              borderStyle="single"
-              borderRight={false}
-              borderLeft={ic > 0 ? true : false}
-              key={`cell-${cell}-${ic}`}
-              width={widths[ic].length}
-              paddingX={1}
-            >
-              <Text wrap="truncate-end">
-                {CellComponent ? <CellComponent value={cell} /> : cell}
-              </Text>
-            </Box>
-          )
-        })}
-      </Box>
-    ))
+    .map((row, i) => {
+      const rowSelected = selected === i
+      return (
+        <Box
+          flexDirection="row"
+          key={`table-row-${i}`}
+          borderTop={true}
+          borderLeft={false}
+          borderRight={false}
+          borderBottom={false}
+          borderStyle="single"
+        >
+          {row.map((cell, ic) => {
+            const CellComponent = cellComponents?.[ic]
+            const color = rowSelected ? { color: 'green' } : {}
+            return (
+              <Box
+                borderBottom={false}
+                borderTop={false}
+                borderStyle="single"
+                borderRight={false}
+                borderLeft={ic > 0 ? true : false}
+                key={`cell-${cell}-${ic}`}
+                width={widths[ic].length}
+                paddingX={1}
+              >
+                {CellComponent ? (
+                  <CellComponent {...color} value={cell} />
+                ) : (
+                  <Text {...color}>{cell}</Text>
+                )}
+              </Box>
+            )
+          })}
+        </Box>
+      )
+    })
 
   return (
     <Box flexDirection="column" borderStyle={'single'} width={'100%'}>

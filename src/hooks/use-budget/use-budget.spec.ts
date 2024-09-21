@@ -1,10 +1,8 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { useBudget } from './use-budget.ts'
 import { useApi, useConfig } from '@hooks'
-import { when } from 'vitest-when'
 import { mock } from 'vitest-mock-extended'
 import { API, BudgetsApi, BudgetSummary, BudgetSummaryResponse } from 'ynab'
-import { getApi } from '@core'
 
 vi.mock('@hooks')
 vi.mock('@core')

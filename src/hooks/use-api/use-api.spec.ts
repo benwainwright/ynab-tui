@@ -1,4 +1,3 @@
-import { useConfig } from '@hooks'
 import { renderHook, waitFor } from '@testing-library/react'
 import { mock } from 'vitest-mock-extended'
 import { API } from 'ynab'

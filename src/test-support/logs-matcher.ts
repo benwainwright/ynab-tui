@@ -4,9 +4,13 @@ export const createLogsMatcher = (output: string) => {
       console.log(output)
     },
     should: {
-      contain: (match: string) => expect(output).toContain(match),
+      contain: (match: string) => {
+        expect(output).toContain(match)
+      },
       not: {
-        contain: (match: string) => expect(output).not.toContain(match),
+        contain: (match: string) => {
+          expect(output).not.toContain(match)
+        },
       },
     },
   }

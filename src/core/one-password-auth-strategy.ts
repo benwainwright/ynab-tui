@@ -1,8 +1,9 @@
-import { read } from "@1password/op-js";
-import { AuthStrategy } from "@types";
+import { read } from '@1password/op-js'
+import { AuthStrategy } from '@types'
 
 export const onePasswordAuthStrategy = (
-  secretReference: string
+  secretReference: string,
 ): AuthStrategy => {
-  return async () => read.parse(secretReference);
-};
+  // eslint-disable-next-line @typescript-eslint/require-await
+  return async () => read.parse(secretReference)
+}

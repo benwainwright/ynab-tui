@@ -1,10 +1,10 @@
-import { getApi, getFirstBudget } from '@core'
 import { useEffect, useState } from 'react'
 import { BudgetSummary } from 'ynab'
-import { useConfig, useApi } from '@hooks'
+import { useApi } from '@hooks'
 
 interface UseBudgetConfig {
   includeAccounts?: boolean
+  dirty?: boolean
 }
 
 export const useBudget = (config?: UseBudgetConfig) => {
@@ -24,10 +24,8 @@ export const useBudget = (config?: UseBudgetConfig) => {
       }
     }
 
-    if (!budget) {
-      asyncContext()
-    }
-  }, [api])
+    void asyncContext()
+  }, [api, config?.dirty])
 
   return { budget }
 }

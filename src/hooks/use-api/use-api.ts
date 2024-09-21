@@ -17,7 +17,7 @@ export const useApi = () => {
     }
 
     if (!api) {
-      asyncContext()
+      void asyncContext()
     }
   }, [])
 

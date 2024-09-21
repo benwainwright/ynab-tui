@@ -1,55 +1,38 @@
 import { CurrencyValue, Scalar, Table } from '@components'
 import { Box, Text, useInput } from 'ink'
 import { useState } from 'react'
-import { TransactionSummary } from 'ynab'
+import { TransactionDetail } from 'ynab'
+import { useTransactionList } from './use-transaction-list.ts'
 
 interface TransactionListProps {
-  transactions: TransactionSummary[]
+  transactions: TransactionDetail[]
   pageSize: number
+  approveTransaction: (id: string) => Promise<void>
+  unapproveTransaction: (id: string) => Promise<void>
+  clearTransaction: (id: string) => Promise<void>
+  unclearTransaction: (id: string) => Promise<void>
 }
 
 export const TransactionList = ({
   pageSize,
   transactions,
+  clearTransaction,
+  unclearTransaction,
+  unapproveTransaction,
+  approveTransaction,
 }: TransactionListProps) => {
-  const transactionRows = transactions.map((transaction) => ({
-    date: transaction.date,
-    payee: transaction.import_payee_name ?? '',
-    amount: new Intl.NumberFormat('en-GB', {
-      style: 'currency',
-      currency: 'GBP',
-    }).format(transaction.amount / 1000),
-    approved: transaction.approved ? 'Approved' : 'Not Approved',
-  }))
-
-  const [range, setRange] = useState<[number, number]>([0, pageSize])
-
-  const next = () => {
-    if (pageSize) {
-      const left = range[0] + pageSize
-      const finalLeft = left > transactions.length ? range[0] : left
-      setRange([finalLeft, finalLeft + pageSize])
-    }
-  }
-  const previous = () => {
-    if (pageSize) {
-      const left = range[0] - pageSize
-      const finalLeft = left < 0 ? 0 : left
-      setRange([finalLeft, finalLeft + pageSize])
-    }
-  }
-
-  useInput((input, key) => {
-    if (key.leftArrow) {
-      previous()
-    } else if (key.rightArrow) {
-      next()
-    }
+  const { tableRows, start, end, selected } = useTransactionList({
+    pageSize,
+    transactions,
+    clearTransaction,
+    unclearTransaction,
+    unapproveTransaction,
+    approveTransaction,
   })
 
   return (
     <Box>
-      <Table data={transactionRows} start={range[0]} end={range[1]} />
+      <Table data={tableRows} start={start} end={end} selected={selected} />
     </Box>
   )
 }

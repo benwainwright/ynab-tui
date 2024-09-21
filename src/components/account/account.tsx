@@ -7,7 +7,14 @@ interface AccountProps {
 }
 
 export const Account = ({ name }: AccountProps) => {
-  const { transactions, account } = useAccount({
+  const {
+    transactions,
+    account,
+    clearTransaction,
+    unclearTransaction,
+    unapproveTransaction,
+    approveTransaction,
+  } = useAccount({
     name,
   })
 
@@ -33,7 +40,14 @@ export const Account = ({ name }: AccountProps) => {
                   clearedBalance={account.cleared_balance / 1000}
                 />
               </Box>
-              <TransactionList transactions={transactions} pageSize={10} />
+              <TransactionList
+                transactions={transactions}
+                pageSize={10}
+                clearTransaction={clearTransaction}
+                unclearTransaction={unclearTransaction}
+                approveTransaction={approveTransaction}
+                unapproveTransaction={unapproveTransaction}
+              />
             </Box>
           )
         }}
