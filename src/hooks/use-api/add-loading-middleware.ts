@@ -12,11 +12,7 @@ export const addLoadingMiddleware = (
                 start(name)
             },
             // eslint-disable-next-line @typescript-eslint/require-await
-            post: async ({ response }) => {
-                console.log(response)
-                if (response.status === 429) {
-                    console.log('Rate limit')
-                }
+            post: async () => {
                 stop(name)
             },
 
