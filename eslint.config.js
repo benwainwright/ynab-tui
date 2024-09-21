@@ -8,7 +8,14 @@ import filenames from 'eslint-plugin-filenames'
 
 export default [
   {
-    ignores: ['dist', 'coverage', 'tmp-declarations', 'api', 'temp'],
+    ignores: [
+      'dist',
+      'coverage',
+      'tmp-declarations',
+      'api',
+      'temp',
+      'vite.config.ts',
+    ],
   },
   {
     files: ['**/*.js', '**/*.ts'],
