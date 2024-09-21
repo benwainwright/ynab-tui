@@ -5,52 +5,53 @@ import { account } from './account.tsx'
 import stripAnsi from 'strip-ansi'
 
 vi.mock('./account.tsx', () => {
-  const mockCommand = command({
-    name: 'account',
-    args: {},
-    handler: vi.fn(),
-  })
+    const mockCommand = command({
+        name: 'account',
+        args: {},
+        handler: vi.fn(),
+    })
 
-  return {
-    account: mockCommand,
-  }
+    return {
+        account: mockCommand,
+    }
 })
 
 vi.spyOn(console, 'log')
 
 beforeEach(() => {
-  vi.resetAllMocks()
-  vi.mocked(console.log).mockReset()
-  vi.stubGlobal('process', {
-    exit: vi.fn(),
-  })
+    vi.resetAllMocks()
+    vi.mocked(console.log).mockReset()
+    vi.stubGlobal('process', {
+        exit: vi.fn(),
+    })
 })
 
 describe('the app command', () => {
-  it('returns the correct version when supplied the --version flag', async () => {
-    await run(app, ['--version'])
+    it('returns the correct version when supplied the --version flag', async () => {
+        await run(app, ['--version'])
 
-    expect(console.log).toHaveBeenCalledWith(APP_VERSION)
-  })
+        expect(console.log).toHaveBeenCalledWith(APP_VERSION)
+    })
 
-  it('has been configured with the correct command', async () => {
-    await run(app, ['account'])
-    expect(account.handler).toBeCalled()
-  })
+    it('has been configured with the correct command', async () => {
+        await run(app, ['account'])
+        expect(account.handler).toBeCalled()
+    })
 
-  it('returns the correct name when passing the --help', async () => {
-    vi.spyOn(console, 'log')
+    it('returns the correct name when passing the --help', async () => {
+        vi.spyOn(console, 'log')
 
-    await run(app, ['--help'])
+        await run(app, ['--help'])
 
-    const output = vi.mocked(console.log).mock.calls[0][0]
+        const output = vi.mocked(console.log).mock.calls[0][0]
 
-    expect(stripAnsi(output)).toEqual(`${APP_NAME} <subcommand>
+        expect(stripAnsi(output)).toEqual(`${APP_NAME} <subcommand>
+> A text-based YNAB client
 
 where <subcommand> can be one of:
 
 - account
 
 For more help, try running \`${APP_NAME} <subcommand> --help\``)
-  })
+    })
 })
