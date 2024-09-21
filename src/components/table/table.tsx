@@ -1,4 +1,5 @@
 import { Box, DOMElement, measureElement, Text } from 'ink'
+import { useState } from 'react'
 
 export type Scalar = string | number | boolean | null | undefined
 
@@ -7,6 +8,9 @@ type ScalarDict = {
 }
 
 interface TableProps<T extends ScalarDict> {
+  onPageChange?: (page: number) => void
+  start?: number
+  end?: number
   data: T[]
   cellComponents?: (
     | (<V extends Scalar>(config: { value: V }) => React.ReactNode)
@@ -15,6 +19,8 @@ interface TableProps<T extends ScalarDict> {
 }
 
 export const Table = <T extends ScalarDict>({
+  start,
+  end,
   data,
   cellComponents,
 }: TableProps<T>) => {
@@ -28,20 +34,28 @@ export const Table = <T extends ScalarDict>({
 
   const startWidths = Array.from({
     length: Object.entries(data[0]).length,
-  }).map(() => 0)
+  }).map(() => ({ length: 0, content: '' }))
 
   const widths = all
-    .reduce<number[]>((previousWidths, row) => {
+    .reduce<{ length: number; content: string }[]>((previousWidths, row) => {
       return previousWidths.map((maxWidth, i) => {
-        return Math.max(maxWidth, String(row[i]).length)
+        if (maxWidth.length > String(row[i]).length) {
+          return maxWidth
+        } else {
+          return { length: String(row[i]).length, content: String(row[i]) }
+        }
       })
     }, startWidths)
-    .map((item) => item + 2)
+    .map((item) => ({ ...item, length: item.length + 4 }))
 
   const headerBoxes = (
-    <Box flexDirection="row" gap={3}>
+    <Box flexDirection="row">
       {headerRow.map((header, i) => (
-        <Box paddingX={1} key={`header-cell-${header}`} width={widths[i]}>
+        <Box
+          key={`header-cell-${header}`}
+          width={widths[i].length}
+          paddingX={1}
+        >
           <Text color="green" bold>
             {header}
           </Text>
@@ -50,39 +64,42 @@ export const Table = <T extends ScalarDict>({
     </Box>
   )
 
-  const contentBoxes = rows.map((row, i) => (
-    <Box
-      flexDirection="row"
-      key={`table-row-${i}`}
-      gap={3}
-      borderTop={true}
-      borderLeft={false}
-      borderRight={false}
-      borderBottom={false}
-      borderStyle="single"
-    >
-      {row.map((cell, ic) => {
-        const CellComponent = cellComponents?.[ic]
-        return (
-          <Box
-            borderBottom={false}
-            borderTop={false}
-            borderStyle="single"
-            borderRight={false}
-            borderLeft={ic > 0 ? true : false}
-            key={`cell-${cell}-${ic}`}
-            width={widths[ic]}
-            paddingX={1}
-          >
-            <Text>{CellComponent ? <CellComponent value={cell} /> : cell}</Text>
-          </Box>
-        )
-      })}
-    </Box>
-  ))
+  const contentBoxes = rows
+    .slice(start ?? 0, end ?? data.length)
+    .map((row, i) => (
+      <Box
+        flexDirection="row"
+        key={`table-row-${i}`}
+        borderTop={true}
+        borderLeft={false}
+        borderRight={false}
+        borderBottom={false}
+        borderStyle="single"
+      >
+        {row.map((cell, ic) => {
+          const CellComponent = cellComponents?.[ic]
+          return (
+            <Box
+              borderBottom={false}
+              borderTop={false}
+              borderStyle="single"
+              borderRight={false}
+              borderLeft={ic > 0 ? true : false}
+              key={`cell-${cell}-${ic}`}
+              width={widths[ic].length}
+              paddingX={1}
+            >
+              <Text wrap="truncate-end">
+                {CellComponent ? <CellComponent value={cell} /> : cell}
+              </Text>
+            </Box>
+          )
+        })}
+      </Box>
+    ))
 
   return (
-    <Box flexDirection="column" borderStyle={'single'} width={"100%"}>
+    <Box flexDirection="column" borderStyle={'single'} width={'100%'}>
       {headerBoxes}
       {contentBoxes}
     </Box>

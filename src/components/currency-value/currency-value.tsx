@@ -12,7 +12,7 @@ export const CurrencyValue = ({
   currencyCode,
 }: CurrencyValueProps) => {
   return (
-    <Text>
+    <Text color="green" bold>
       {new Intl.NumberFormat(localeCode, {
         style: 'currency',
         currency: currencyCode,

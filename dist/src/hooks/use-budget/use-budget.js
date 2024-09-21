@@ -1,17 +1,21 @@
-import { getApi } from "../../core/index.js";
 import { useEffect, useState } from "react";
-import { useConfig } from "../index.js";
+import { useApi } from "../index.js";
 export const useBudget = (config)=>{
     const [budget, setBudget] = useState();
+    const { api } = useApi();
     useEffect(()=>{
         const asyncContext = async ()=>{
-            const { apiAuthStrategy } = useConfig();
-            const api = await getApi(apiAuthStrategy);
-            const { data: { budgets: [budget] } } = await api.budgets.getBudgets(config.includeAccounts);
-            setBudget(budget);
+            if (api) {
+                const { data: { budgets: [budget] } } = await api.budgets.getBudgets(config?.includeAccounts);
+                setBudget(budget);
+            }
         };
-        asyncContext();
-    }, []);
+        if (!budget) {
+            asyncContext();
+        }
+    }, [
+        api
+    ]);
     return {
         budget
     };

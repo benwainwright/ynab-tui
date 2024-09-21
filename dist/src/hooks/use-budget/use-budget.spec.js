@@ -1,9 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { useBudget } from "./use-budget.js";
-import { useConfig } from "../index.js";
-import { when } from "vitest-when";
+import { useApi, useConfig } from "../index.js";
 import { mock } from "vitest-mock-extended";
-import { getApi } from "../../core/index.js";
 vi.mock('@hooks');
 vi.mock('@core');
 beforeEach(()=>{
@@ -30,7 +28,9 @@ describe('use budget', ()=>{
             }
         });
         mockBudgets.getBudgets.mockResolvedValue(response);
-        when(getApi).calledWith(mockAuthStrategy).thenResolve(mockApi);
+        vi.mocked(useApi).mockReturnValue({
+            api: mockApi
+        });
         const { result } = renderHook(()=>useBudget());
         expect(result.current.budget).toBeUndefined();
         await waitFor(()=>{

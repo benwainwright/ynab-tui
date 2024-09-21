@@ -13,9 +13,12 @@ export const useAccount = (config: UseAccountConfig) => {
   const { api } = useApi()
   const { budget } = useBudget({ includeAccounts: true })
 
+  const [range, setRange] = useState<[number, number]>([0, 0])
+
   const account = budget?.accounts?.find(
     (account) => account.name === config.name,
   )
+
   useEffect(() => {
     const asyncContext = async () => {
       if (api && budget) {
@@ -35,5 +38,9 @@ export const useAccount = (config: UseAccountConfig) => {
     asyncContext()
   }, [api, budget, transactions, account])
 
-  return { account, transactions }
+  return {
+    account,
+    transactions,
+    range,
+  }
 }

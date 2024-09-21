@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/hooks/use-account/index.ts"],"sourcesContent":["export { useAccount } from './use-account.tsx'\n"],"names":["useAccount"],"mappings":"AAAA,SAASA,UAAU,2BAA2B"}
