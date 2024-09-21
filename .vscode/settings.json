@@ -3,5 +3,7 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
-  "testing.alwaysRevealTestOnStateChange": false
+  "testing.alwaysRevealTestOnStateChange": false,
+  "prettier.configPath": "prettier.config.json",
+  "prettier.requireConfig": true
 }

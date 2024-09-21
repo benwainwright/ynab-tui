@@ -22,8 +22,6 @@ export const useAccount = (config: UseAccountConfig) => {
   const result = useContext(BudgetContext)
   const { budget, refresh } = result
 
-  console.log(api, result)
-
   const account = budget?.accounts?.find(
     (account) => account.name === config.name,
   )

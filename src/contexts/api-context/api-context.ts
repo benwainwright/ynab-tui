@@ -1,6 +1,14 @@
 import { createContext } from 'react'
 import { API } from 'ynab'
 
-export const ApiContext = createContext<{ api: API | undefined }>({
-  api: undefined,
+interface ApiContextType {
+    api: API | undefined
+    loading: Record<string, boolean>
+    isCurrentlyLoading: string | undefined
+}
+
+export const ApiContext = createContext<ApiContextType>({
+    api: undefined,
+    loading: {},
+    isCurrentlyLoading: undefined,
 })

@@ -4,6 +4,7 @@ import { AuthStrategy } from '@types'
 import { mock } from 'vitest-mock-extended'
 import { when } from 'vitest-when'
 import { useConfig } from './use-config.ts'
+
 vi.mock('@core')
 
 describe('use config', () => {
