@@ -10,6 +10,8 @@
         "ynab": "./bin/run.js"
     },
     "scripts": {
+        "types": "tsc --declaration --emitDeclarationOnly --watch",
+        "types:ci": "tsc --declaration --emitDeclarationOnly",
         "test": "NODE_OPTIONS=--no-warnings vitest --watch",
         "test:ci": "NODE_OPTIONS=--no-warnings vitest --coverage",
         "test:ui": "NODE_OPTIONS=--no-warnings vitest --ui --watch",
