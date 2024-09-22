@@ -756,7 +756,7 @@ describe('useTransactionList', () => {
             transactions.push(
                 mock<TransactionDetail>({
                     id: i.toString(),
-                    date: `2023-09-0${i}`,
+                    date: `2023-09-0${String(i)}`,
                     approved: false,
                     cleared: 'uncleared',
                 })

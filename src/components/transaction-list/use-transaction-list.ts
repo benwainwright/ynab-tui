@@ -60,12 +60,9 @@ export const useTransactionList = ({
         if (actualPageSize) {
             const left = start + actualPageSize
             const newStart = left >= transactions.length ? start : left
-
             const remaining = transactions.length - newStart
-
             const nextPageSize =
                 remaining < actualPageSize ? remaining : actualPageSize
-
             const newEnd = newStart + nextPageSize
 
             if (selected !== undefined && selected > nextPageSize) {
