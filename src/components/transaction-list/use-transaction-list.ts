@@ -44,24 +44,42 @@ export const useTransactionList = ({
         cleared: getClearCell(transaction.cleared),
     }))
 
+    const actualPageSize = pageSize <= 0 ? transactions.length : pageSize
+
     const initialEnd =
-        pageSize > transactions.length ? transactions.length : pageSize
+        actualPageSize > transactions.length
+            ? transactions.length
+            : actualPageSize
 
     const [selected, setSelected] = useState<number | undefined>()
     const [range, setRange] = useState<[number, number]>([0, initialEnd])
+    const start = range[0]
+    const end = range[1] > transactions.length ? transactions.length : range[1]
 
     const next = () => {
-        if (pageSize) {
-            const left = range[0] + pageSize
-            const finalLeft = left >= transactions.length ? range[0] : left
-            setRange([finalLeft, finalLeft + pageSize])
+        if (actualPageSize) {
+            const left = start + actualPageSize
+            const newStart = left >= transactions.length ? start : left
+
+            const remaining = transactions.length - newStart
+
+            const nextPageSize =
+                remaining < actualPageSize ? remaining : actualPageSize
+
+            const newEnd = newStart + nextPageSize
+
+            if (selected !== undefined && selected > nextPageSize) {
+                setSelected(undefined)
+            }
+
+            setRange([newStart, newEnd])
         }
     }
     const previous = () => {
-        if (pageSize) {
-            const left = range[0] - pageSize
+        if (actualPageSize) {
+            const left = start - actualPageSize
             const finalLeft = left < 0 ? 0 : left
-            setRange([finalLeft, finalLeft + pageSize])
+            setRange([finalLeft, finalLeft + actualPageSize])
         }
     }
 
@@ -75,7 +93,10 @@ export const useTransactionList = ({
         if (selected === undefined) {
             setSelected(0)
         } else {
-            setSelected(selected < pageSize - 1 ? selected + 1 : selected)
+            const currentPageSize = end - start
+            setSelected(
+                selected < currentPageSize - 1 ? selected + 1 : selected
+            )
         }
     }
 
@@ -124,5 +145,10 @@ export const useTransactionList = ({
         }
     })
 
-    return { tableRows, start: range[0], end: range[1], selected }
+    return {
+        tableRows,
+        start,
+        end,
+        selected,
+    }
 }

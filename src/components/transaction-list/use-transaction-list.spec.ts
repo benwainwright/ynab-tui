@@ -598,6 +598,237 @@ describe('useTransactionList', () => {
         expect(result.current.selected).toBe(1) // Should stay at last item
     })
 
+    it('should handle negative pageSize by treating it as zero and displaying all transactions', () => {
+        const mockApproveTransaction = vi.fn()
+        const mockUnapproveTransaction = vi.fn()
+        const mockClearTransaction = vi.fn()
+        const mockUnclearTransaction = vi.fn()
+
+        const transaction1 = mock<TransactionDetail>({
+            id: '1',
+            date: '2023-09-01',
+        })
+        const transaction2 = mock<TransactionDetail>({
+            id: '2',
+            date: '2023-09-02',
+        })
+        const transactions: TransactionDetail[] = [transaction1, transaction2]
+
+        const { result } = renderHook(() =>
+            useTransactionList({
+                transactions,
+                pageSize: -5,
+                approveTransaction: mockApproveTransaction,
+                unapproveTransaction: mockUnapproveTransaction,
+                clearTransaction: mockClearTransaction,
+                unclearTransaction: mockUnclearTransaction,
+            })
+        )
+
+        expect(result.current.start).toBe(0)
+        expect(result.current.end).toBe(2)
+        expect(result.current.tableRows.length).toBe(2)
+    })
+
+    it('should handle pageSize larger than transactions array by displaying all transactions in one page', () => {
+        const mockApproveTransaction = vi.fn()
+        const mockUnapproveTransaction = vi.fn()
+        const mockClearTransaction = vi.fn()
+        const mockUnclearTransaction = vi.fn()
+        let inputHandler: (input: string, key: unknown) => void = () => {}
+
+        when(vi.mocked(useInput))
+            .calledWith(expect.any(Function))
+            .thenDo((handler) => {
+                inputHandler = handler
+            })
+
+        const transaction1 = mock<TransactionDetail>({
+            id: '1',
+            date: '2023-09-01',
+        })
+        const transaction2 = mock<TransactionDetail>({
+            id: '2',
+            date: '2023-09-02',
+        })
+        const transactions: TransactionDetail[] = [transaction1, transaction2]
+
+        const { result } = renderHook(() =>
+            useTransactionList({
+                transactions,
+                pageSize: 10,
+                approveTransaction: mockApproveTransaction,
+                unapproveTransaction: mockUnapproveTransaction,
+                clearTransaction: mockClearTransaction,
+                unclearTransaction: mockUnclearTransaction,
+            })
+        )
+
+        expect(result.current.start).toBe(0)
+        expect(result.current.end).toBe(2)
+        expect(result.current.tableRows.length).toBe(2)
+
+        act(() => {
+            inputHandler('', { rightArrow: true })
+        })
+
+        expect(result.current.start).toBe(0)
+        expect(result.current.end).toBe(2)
+    })
+
+    it('should reset selection to undefined when moving to last page if selected index is greater than number of items on last page', () => {
+        const mockApproveTransaction = vi.fn()
+        const mockUnapproveTransaction = vi.fn()
+        const mockClearTransaction = vi.fn()
+        const mockUnclearTransaction = vi.fn()
+        let inputHandler: (input: string, key: unknown) => void = () => {}
+
+        when(vi.mocked(useInput))
+            .calledWith(expect.any(Function))
+            .thenDo((handler) => {
+                inputHandler = handler
+            })
+
+        const transactions: TransactionDetail[] = []
+        for (let i = 1; i <= 7; i++) {
+            transactions.push(
+                mock<TransactionDetail>({
+                    id: i.toString(),
+                    date: `2023-09-0${String(i)}`,
+                    approved: false,
+                    cleared: 'uncleared',
+                })
+            )
+        }
+
+        const { result } = renderHook(() =>
+            useTransactionList({
+                transactions,
+                pageSize: 3,
+                approveTransaction: mockApproveTransaction,
+                unapproveTransaction: mockUnapproveTransaction,
+                clearTransaction: mockClearTransaction,
+                unclearTransaction: mockUnclearTransaction,
+            })
+        )
+
+        act(() => {
+            inputHandler('', { downArrow: true })
+        })
+        act(() => {
+            inputHandler('', { downArrow: true })
+        })
+        act(() => {
+            inputHandler('', { downArrow: true })
+        })
+        expect(result.current.selected).toBe(2)
+
+        act(() => {
+            inputHandler('', { rightArrow: true })
+        })
+
+        act(() => {
+            inputHandler('', { rightArrow: true })
+        })
+
+        expect(result.current.start).toBe(6)
+        expect(result.current.end).toBe(7)
+
+        expect(result.current.selected).toBeUndefined()
+    })
+
+    it('should not move selection beyond the end of the list on the last page when number of transactions is not a multiple of pageSize', () => {
+        const mockApproveTransaction = vi.fn()
+        const mockUnapproveTransaction = vi.fn()
+        const mockClearTransaction = vi.fn()
+        const mockUnclearTransaction = vi.fn()
+        let inputHandler: (input: string, key: unknown) => void = () => {}
+
+        when(vi.mocked(useInput))
+            .calledWith(expect.any(Function))
+            .thenDo((handler) => {
+                inputHandler = handler
+            })
+
+        // Create 7 transactions (not a multiple of pageSize 3)
+        const transactions: TransactionDetail[] = []
+        for (let i = 1; i <= 7; i++) {
+            transactions.push(
+                mock<TransactionDetail>({
+                    id: i.toString(),
+                    date: `2023-09-0${i}`,
+                    approved: false,
+                    cleared: 'uncleared',
+                })
+            )
+        }
+
+        const { result } = renderHook(() =>
+            useTransactionList({
+                transactions,
+                pageSize: 3,
+                approveTransaction: mockApproveTransaction,
+                unapproveTransaction: mockUnapproveTransaction,
+                clearTransaction: mockClearTransaction,
+                unclearTransaction: mockUnclearTransaction,
+            })
+        )
+
+        act(() => {
+            inputHandler('', { rightArrow: true })
+        })
+
+        act(() => {
+            inputHandler('', { rightArrow: true })
+        })
+
+        expect(result.current.start).toBe(6)
+        expect(result.current.end).toBe(7)
+
+        act(() => {
+            inputHandler('', { downArrow: true })
+        })
+
+        expect(result.current.selected).toBe(0)
+
+        act(() => {
+            inputHandler('', { downArrow: true })
+        })
+        expect(result.current.selected).toBe(0)
+    })
+
+    it('should handle zero pageSize by displaying all transactions', () => {
+        const mockApproveTransaction = vi.fn()
+        const mockUnapproveTransaction = vi.fn()
+        const mockClearTransaction = vi.fn()
+        const mockUnclearTransaction = vi.fn()
+
+        const transaction1 = mock<TransactionDetail>({
+            id: '1',
+            date: '2023-09-01',
+        })
+        const transaction2 = mock<TransactionDetail>({
+            id: '2',
+            date: '2023-09-02',
+        })
+        const transactions: TransactionDetail[] = [transaction1, transaction2]
+
+        const { result } = renderHook(() =>
+            useTransactionList({
+                transactions,
+                pageSize: 0,
+                approveTransaction: mockApproveTransaction,
+                unapproveTransaction: mockUnapproveTransaction,
+                clearTransaction: mockClearTransaction,
+                unclearTransaction: mockUnclearTransaction,
+            })
+        )
+
+        expect(result.current.start).toBe(0)
+        expect(result.current.end).toBe(2)
+        expect(result.current.tableRows.length).toBe(2)
+    })
+
     it('should format zero amounts correctly', () => {
         const mockApproveTransaction = vi.fn()
         const mockUnapproveTransaction = vi.fn()
