@@ -10,7 +10,11 @@ export default defineConfig({
             enabled: true,
             reporter: ['html'],
             include: ['src/**/*.ts', 'src/**/*.tsx'],
-            exclude: ['src/test-support/*.ts'],
+            exclude: [
+                'src/test-support/*.ts',
+                'src/**/*.spec.ts',
+                'src/**/*.spec.tsx',
+            ],
             thresholds: {
                 functions: 100,
                 lines: 100,
